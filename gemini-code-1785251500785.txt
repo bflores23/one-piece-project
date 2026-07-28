@@ -1,0 +1,19 @@
+eternal_anchor_core/
+├── eternal_anchor.db            # Local SQLite Database
+├── main.py                     # Entrypoint CLI & Executable Loop
+└── src/
+    ├── database/
+    │   ├── __init__.py
+    │   └── models.py           # Card, InventoryItem, PriceSnapshot
+    ├── engine/
+    │   ├── __init__.py
+    │   ├── normalizer.py       # Code & Rarity Rules Catalog
+    │   └── graph_engine.py     # Directed Synergy Network Graph
+    └── console/
+        ├── __init__.py
+        └── plugins/
+            ├── __init__.py
+            ├── base.py              # Plugin Interface
+            ├── deck_validator.py    # Synergy Analyzer
+            ├── financial_report.py  # Portfolio Audit
+            └── data_importer.py     # CSV/JSON Ingestion
