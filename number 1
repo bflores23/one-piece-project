@@ -1,0 +1,39 @@
+# src/database/models.py
+from datetime import datetime
+from sqlalchemy import Column, String, Float, Integer, ForeignKey, DateTime, create_engine
+from sqlalchemy.orm import declarative_base, relationship
+
+Base = declarative_base()
+
+class Card(Base):
+    __tablename__ = 'cards'
+
+    card_id = Column(String, primary_key=True)  # Canonical Ref (e.g., OP05-119)
+    name = Column(String, nullable=False)
+    set_code = Column(String, nullable=False)
+    rarity = Column(String, nullable=False)      # e.g., SEC-Parallel, SR
+    category = Column(String, nullable=False)    # Character, Leader, Event, Stage
+    
+    inventory_items = relationship("InventoryItem", back_populates="card")
+    price_history = relationship("PriceSnapshot", back_populates="card")
+
+class InventoryItem(Base):
+    __tablename__ = 'inventory'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    card_id = Column(String, ForeignKey('cards.card_id'), nullable=False)
+    location = Column(String, nullable=False)   # e.g., "Binder 1 (Vault Page 1)"
+    condition = Column(String, default="NM")    # NM, LP, Graded PSA 10
+    acquisition_price = Column(Float, nullable=True)
+    
+    card = relationship("Card", back_populates="inventory_items")
+
+class PriceSnapshot(Base):
+    __tablename__ = 'price_snapshots'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    card_id = Column(String, ForeignKey('cards.card_id'), nullable=False)
+    market_price = Column(Float, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    card = relationship("Card", back_populates="price_history")
